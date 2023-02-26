@@ -1,0 +1,34 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Prebuild') {
+            steps {
+                echo 'Prebuilding started...'
+                sh 'export KUBECONFIG=$HOME/.kube/config'
+                sh 'curl -L https://git.io/get_helm.sh | bash -s -- --version v3.8.2'
+            }
+        }
+        stage('Build') {
+            environment {
+                REPOSITORY_URI = 'aviatus/dream-case'
+                IMAGE_TAG = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
+            }
+            steps {
+                echo 'Building started...'
+                sh 'docker build -f Dockerfile -t $REPOSITORY_URI:latest .'
+                sh 'docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG'
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Testing..'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying started.'
+            }
+        }
+    }
+}
