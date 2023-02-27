@@ -1,21 +1,24 @@
 pipeline {
-    agent any
-
-    stages {
-        stage('Prebuild') {
-            steps {
-                echo 'Prebuilding started...'
-                sh 'export KUBECONFIG=$HOME/.kube/config'
-                sh 'curl -L https://git.io/get_helm.sh | bash -s -- --version v3.8.2'
-            }
+    agent {
+        docker {
+            image 'ubuntu:22.04'
         }
+    }
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '5'))
+    }
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('0a800395-9183-4b58-99fb-19cd25f6acf9')
+    }
+    stages {
         stage('Build') {
             environment {
                 REPOSITORY_URI = 'aviatus/dream-case'
-                IMAGE_TAG = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
             }
             steps {
                 echo 'Building started...'
+                sh 'ls -la'
+                sh 'cd app'
                 sh 'docker build -f Dockerfile -t $REPOSITORY_URI:latest .'
                 sh 'docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG'
             }
@@ -25,9 +28,16 @@ pipeline {
                 echo 'Testing..'
             }
         }
-        stage('Deploy') {
+        stage('Deploy Docker') {
             steps {
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
                 echo 'Deploying started.'
+            }
+        }
+        stage('Deploy Kubernetes') {
+            steps {
+                sh 'curl -L https://git.io/get_helm.sh | bash -s -- --version v3.8.2'
+                echo 'Deploy k8s'   
             }
         }
     }
