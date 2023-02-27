@@ -1,0 +1,15 @@
+controller:
+  # tolerations:
+  # - key: "role"
+  #   operator: "Equal"
+  #   effect: "NoSchedule"
+  #   value: "jenkins"
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: "role"
+            operator: In
+            values:
+            - "jenkins"
