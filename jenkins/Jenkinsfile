@@ -11,21 +11,20 @@ pipeline {
         DOCKERHUB_CREDENTIALS = credentials('0a800395-9183-4b58-99fb-19cd25f6acf9')
     }
     stages {
+        stage('Prebuild') {
+            steps{
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '.']], submoduleCfg: [], userRemoteConfigs: [[url: 'https://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@github.com/aviatus/dream-case.git']]])
+            }
+        }
         stage('Build') {
             environment {
                 REPOSITORY_URI = 'aviatus/dream-case'
             }
             steps {
                 echo 'Building started...'
-                sh 'ls -la'
                 sh 'cd app'
                 sh 'docker build -f Dockerfile -t $REPOSITORY_URI:latest .'
                 sh 'docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG'
-            }
-        }
-        stage('Test') {
-            steps {
-                echo 'Testing..'
             }
         }
         stage('Deploy Docker') {
