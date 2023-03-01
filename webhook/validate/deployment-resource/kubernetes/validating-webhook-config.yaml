@@ -1,0 +1,21 @@
+kind: ValidatingWebhookConfiguration
+apiVersion: admissionregistration.k8s.io/v1
+metadata:
+  name: deployment-resource-require
+  annotations:
+    cert-manager.io/inject-ca-from: default/client
+webhooks:
+  - name: deployment-resource-require.aviatus.com
+    clientConfig:
+      service:
+        namespace: default
+        name: validating-webhook
+        path: /deployment-validate
+    rules:
+      - apiGroups: ["apps"]
+        apiVersions: ["v1"]
+        resources: ["deployments"]
+        operations: ["CREATE", "UPDATE"]
+        scope: Namespaced
+    sideEffects: None
+    admissionReviewVersions: ["v1"]
