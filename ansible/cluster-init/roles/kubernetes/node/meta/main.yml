@@ -1,0 +1,12 @@
+---
+dependencies:
+  - { role: cri }
+  - {
+      role: commons/pre-install,
+      pkgs:
+        [
+          "kubeadm={{kube_version}}-00",
+          "kubelet={{kube_version}}-00",
+          "kubectl={{kube_version}}-00",
+        ],
+    }

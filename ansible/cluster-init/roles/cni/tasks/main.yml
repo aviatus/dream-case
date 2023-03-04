@@ -1,0 +1,25 @@
+---
+- name: Create Kubernetes addon directory
+  file:
+    path: "{{ network_dir }}"
+    state: directory
+
+- name: Download calico manifest files
+  ansible.builtin.uri:
+    url: https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml
+    dest: "{{ network_dir }}/calico.yaml"
+
+- name: "Apply calico manifest"
+  shell: kubectl apply --kubeconfig={{ kubeadmin_config }} -f {{ network_dir }}/calico.yaml
+  delegate_to: "{{ groups['master'][0] }}"
+  run_once: true
+  ignore_errors: true
+  changed_when: false
+
+- name: "Check {{ network }} daemonset is working"
+  shell: kubectl --kubeconfig={{ kubeadmin_config }} get ds --all-namespaces | grep {{ network }}
+  delegate_to: "{{ groups['master'][0] }}"
+  run_once: true
+  register: check_net
+  ignore_errors: true
+  changed_when: false

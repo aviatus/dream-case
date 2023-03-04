@@ -1,0 +1,8 @@
+- name: Install Docker
+  ansible.builtin.apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - docker-buildx-plugin
+    state: latest
+    update_cache: true

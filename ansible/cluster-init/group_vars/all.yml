@@ -1,0 +1,45 @@
+# Ansible
+# ansible_user: root
+
+# Kubernetes
+kube_version: 1.25.3
+token: b0f7b8.8d1767876297d85c
+
+# 1.8.x feature: --feature-gates SelfHosting=true
+init_opts: ""
+
+# Any other additional opts you want to add..
+kubeadm_opts: ""
+# For example:
+# kubeadm_opts: '--apiserver-cert-extra-sans "k8s.domain.com,kubernetes.domain.com"'
+
+service_cidr: "11.96.0.0/12"
+pod_network_cidr: "11.244.0.0/16"
+
+network: calico
+
+network_interface: ""
+
+enable_dashboard: yes
+
+# A list of insecure registries you might need to define
+# insecure_registries: []
+insecure_registries: ["gcr.io"]
+
+systemd_dir: /etc/docker
+system_env_dir: /etc
+network_dir: /etc/kubernetes/network
+kubeadmin_config: /etc/kubernetes/admin.conf
+kube_addon_dir: /etc/kubernetes/addon
+
+ansible_distribution: ubuntu
+ansible_distribution_release: focal
+
+# temporary directory used by additional features
+tmp_dir: /tmp/kubeadm-ansible-files
+
+# Container runtimes ('containerd', 'crio')
+container_runtime: docker
+cri_socket: unix:///run/docker.sock
+
+master_ip: "{{ hostvars[groups['master'][0]]['ansible_default_ipv4'].address | default(groups['master'][0]) }}"
