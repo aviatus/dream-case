@@ -1,0 +1,2 @@
+- name: "Update kubernetes deployment for the latest code"
+  shell: "kubectl rollout restart deployment {{ deployment_name }} -n {{ namespace }}"
