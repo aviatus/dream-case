@@ -43,9 +43,11 @@ spec:
           livenessProbe:
             tcpSocket:
               port: http
-          readinessProbe:
-            tcpSocket:
-              port: http
+            initialDelaySeconds: {{ default 10 .Values.readinessProbe.initialDelaySeconds }}
+          readinessProbe: 
+              tcpSocket:
+                port: http
+              initialDelaySeconds: {{ default 10 .Values.readinessProbe.initialDelaySeconds }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

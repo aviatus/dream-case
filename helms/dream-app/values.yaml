@@ -74,6 +74,10 @@ autoscaling:
 
 nodeSelector: {}
 
+livenessProbe: {}
+readinessProbe:
+  initialDelaySeconds: 15
+
 topologySpreadConstraints:
   - maxSkew: 1
     topologyKey: kubernetes.io/hostname
