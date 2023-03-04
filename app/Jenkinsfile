@@ -1,0 +1,53 @@
+pipeline {
+    agent any
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '5'))
+    }
+    environment {
+        REPOSITORY_URI = 'aviatus/dream-case'
+    }
+    stages {
+        stage('Prebuild') {
+            environment {
+                GIT_REPO = "https://${github_access}@github.com/aviatus/dream-case.git"
+            }
+            steps{
+                checkout([
+                    $class: 'GitSCM', 
+                    branches: [[name: '*/master']], 
+                    doGenerateSubmoduleConfigurations: false, 
+                    extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '.']], 
+                    submoduleCfg: [], 
+                    userRemoteConfigs: [[credentialsId: 'github_access', url: GIT_REPO]]
+                ])
+            }
+        }
+        stage('Build') {
+            environment {
+                IMAGE_TAG = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
+            }
+            steps {
+                echo 'Building started...'
+                dir('app') {
+                    sh 'docker build -f Dockerfile -t $REPOSITORY_URI:latest .'
+                    sh 'docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG'
+                }
+            }
+        }
+        stage('Deploy Docker') {
+            environment {
+                DOCKERHUB_CREDENTIALS = credentials('dockerhub')
+            }
+            steps {
+                echo 'Deploying started.'
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                sh 'docker push $REPOSITORY_URI:latest'
+            }
+        }
+    }
+    post {
+		always {
+			sh 'docker logout'
+		}
+	}
+}
