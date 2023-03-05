@@ -1,8 +1,7 @@
 ---
 - name: "Update the kubernetes"
-  hosts: localhost
-  connection: local 
+  hosts: master
   gather_facts: yes
-#   become: yes
+  become: yes
   roles:
     - { role: update }
