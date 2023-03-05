@@ -1,0 +1,33 @@
+pipeline {
+    agent {
+        docker {
+            image 'quay.io/ansible/ansible-runner:stable-2.12-latest'
+        }
+    }
+    stages {
+        stage('Fetch ansible playbook') {
+            environment {
+                GIT_REPO = "https://${github_access}@github.com/aviatus/dream-case.git"
+            }
+            steps {
+                checkout([
+                    $class: 'GitSCM', 
+                    branches: [[name: '*/master']], 
+                    doGenerateSubmoduleConfigurations: false, 
+                    extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '.']], 
+                    submoduleCfg: [], 
+                    userRemoteConfigs: [[credentialsId: 'github_access', url: GIT_REPO]]
+                ])
+            }
+        }
+        stage('Play ansible playbook') {
+            steps {
+                dir('ansible/update-resource') {
+                    sshagent(credentials: ['k8s_ssh']) {
+                        sh 'ansible-playbook  site.yaml'
+                    }
+                }
+            }
+        }
+    }
+}
