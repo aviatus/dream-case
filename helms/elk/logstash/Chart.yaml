@@ -1,0 +1,10 @@
+apiVersion: v2
+name: logstash-parent
+description: A parent chart for Logstash deployment
+
+type: application
+version: 0.1.0
+dependencies:
+  - name: logstash
+    version: '7.17.3'
+    repository: '@elastic'

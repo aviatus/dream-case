@@ -1,0 +1,10 @@
+apiVersion: v2
+name: ingress-nginx-controller
+description: A Helm chart for Kubernetes NGINX Ingress Controller
+
+type: application
+version: 0.1.0
+dependencies:
+  - name: nginx-ingress
+    version: "0.16.2"
+    repository: "https://helm.nginx.com/stable"

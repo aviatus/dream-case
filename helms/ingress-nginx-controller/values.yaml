@@ -1,7 +1,8 @@
-controller:
+nginx-ingress:
+  controller:
     service:
-        enabled: true
-        type: NodePort
-        nodePorts:
-          http: 32080
-          https: 32443
+      enabled: true
+      type: NodePort
+      nodePorts:
+        http: 32080
+        https: 32443

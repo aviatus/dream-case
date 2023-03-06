@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: logstash-config
+data:
+  logstash.yml: |
+    # Add any configuration you need
+    http.host: "0.0.0.0"
+    xpack.monitoring.elasticsearch.hosts: [ "https://elasticsearch-master:9200" ]
+    xpack.monitoring.elasticsearch.username: "elastic"
+    xpack.monitoring.elasticsearch.password: "W0GoV4c6s5d0uk85"
+    xpack.monitoring.elasticsearch.ssl.certificate_authority: /usr/share/logstash/config/credentials/ca.crt
+    
+  pipelines.yml: |
+    - pipeline.id: main
+      path.config: "/usr/share/logstash/pipeline/main*.conf"
+    
+    - pipeline.id: audit
+      path.config: "/usr/share/logstash/pipeline/audit.conf"
