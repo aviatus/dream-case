@@ -16,9 +16,11 @@ Applied `values.yaml` with `https://charts.jenkins.io/` helm repo which identifi
 
 3. Deploy Elasticsearch on K8s for kubernetes & application logging purposes.
 
+ELK stack used with https in cluster. The CA certificate and elastic credentials which is created for elastic search injected with configs to logstash and kibana as secret. Elastic search limited with single node for system architecture performance requirements.
+
 4. Deploy Prometheus & Grafana on K8s for kubernetes and application monitoring purposes.
 
-For monitoring of the app `prometheus-community/prometheus` and `grafana/grafana` packets are used. Prometheus data source added to grafana and created a grafana dashboard.
+For monitoring of the app `prometheus-community/prometheus` and `grafana/grafana` packets with modification. Prometheus data source added to grafana and created a grafana dashboard.
 
 ![Grafana Screenshot](assets/grafana-dashboard.png)
 
@@ -29,10 +31,16 @@ https://snapshots.raintank.io/dashboard/snapshot/DgBzZvFuHupSaPUDRetbu3nRU42JojH
 1. Create the required kubernetes manifests (deployment, service, ingress, secret, hpa etc.)
 2. Application should be running on both worker nodes with at least 4 pods and service will be balanced behind the nginx.
 3. Make sure the application receives requests as soon as it is ready and restarted if there is a problem.
+
+The dream app helm files created with deployment, service, ingress, and hpa. For distributed topology anti pod affinity added to cluster. Nginx Ingress controller service type changed to `NodePort` for the system environment. The helm file modified for nginx ingress controller. The packet analyzed with `kubescore` and reasonable improvements are added (resource, limits, initDelay, etc.).
+
 4. Create a build pipeline for the application via Jenkinsfile.
 
+Jenkins docker and github plugins installed as prequisites. The github and docker access tokens added to jenkins credentials for security reasons. The pipeline pulls the image, build project with docker and push to designated dockerhub repository. The mentioned file can be found in app folder.
+
 5. Create a deploy pipeline for the application via Jenkinsfile.
-   Jenkins agent used with docker ansible image which is `quay.io/ansible/ansible-runner:stable-2.12-latest`. The one of the prequisites of pipeline is `ssh-agent` plugin for ssh key security reasons. The private ssh key is stored and used with jenkins credentials via `ssh-agent`. In that deployment system is created in a simple way. The deploy pipeline can be modified in many ways such as flexibility, simplicity and security. The ansible package can be updated as a more generic version for resources and namespaces. The another approach would be creating a certificate for kube api server and store it in jenkins credentials instead of ssh key thus run rollout command in the agent.
+
+Jenkins agent used with docker ansible image which is `quay.io/ansible/ansible-runner:stable-2.12-latest`. The one of the prequisites of pipeline is `ssh-agent` plugin for ssh key security reasons. The private ssh key is stored and used with jenkins credentials via `ssh-agent`. In that deployment system is created in a simple way. The deploy pipeline can be modified in many ways such as flexibility, simplicity and security. The ansible package can be updated as a more generic version for resources and namespaces. The another approach would be creating a certificate for kube api server and store it in jenkins credentials instead of ssh key thus run rollout command in the agent.
 
 6. What would you do if you were to have canary deployments? Which tool would you use? How would you manage it through the pipeline? Please explain.
 
@@ -69,3 +77,5 @@ For a Jenkins pipeline that uses `input`, confirmation can be added at each stag
 7. Write a custom validation webhook so that if a deployment does not have resource requests specified, it should fail.
 
 The `cert-manager` used for validation webhook certification for kube api server communication. The validation webhook checks the deployment containers and rejects deployments where limits and request are not setted. Webhook docker image pushed to `aviatus/validating-webhook`.
+
+_Note: Some of the items on the list developed on the Kind cluster for time and performance reasons. The rest of them natively build up on ec2 instances._

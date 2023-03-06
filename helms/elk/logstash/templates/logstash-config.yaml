@@ -7,9 +7,9 @@ data:
     # Add any configuration you need
     http.host: "0.0.0.0"
     xpack.monitoring.elasticsearch.hosts: [ "https://elasticsearch-master:9200" ]
-    xpack.monitoring.elasticsearch.username: "elastic"
-    xpack.monitoring.elasticsearch.password: "W0GoV4c6s5d0uk85"
-    xpack.monitoring.elasticsearch.ssl.certificate_authority: /usr/share/logstash/config/credentials/ca.crt
+    xpack.monitoring.elasticsearch.username: ${username}
+    xpack.monitoring.elasticsearch.password: ${password}
+    xpack.monitoring.elasticsearch.ssl.certificate_authority: /usr/share/logstash/config/certs/ca.crt
     
   pipelines.yml: |
     - pipeline.id: main

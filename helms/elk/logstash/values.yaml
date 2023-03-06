@@ -26,4 +26,8 @@ logstash:
   secretMounts: 
   - name: ca
     secretName: elasticsearch-master-certs
-    path: /usr/share/logstash/config/credentials
+    path: /usr/share/logstash/config/certs
+  
+  envFrom:
+  - secretRef: 
+      name: elasticsearch-master-credentials
