@@ -4,7 +4,7 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr: '5'))
     }
     environment {
-        REPOSITORY_URI = 'aviatus/dream-case'
+        REPOSITORY_URI = 'aviatus/dream-app'
     }
     stages {
         stage('Prebuild') {

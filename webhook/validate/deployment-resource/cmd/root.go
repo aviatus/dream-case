@@ -117,9 +117,7 @@ func validateDeployment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Create a response that either allows or rejects the deployment creation
-	// based off of the value of the hello label. Also, check to see if
-	// we should supply a warning message even it is allowed.
+	// Do server-side validation that the deployment has resource limits set.
 	admissionResponse := &admissionv1.AdmissionResponse{}
 	admissionResponse.Allowed = true
 
