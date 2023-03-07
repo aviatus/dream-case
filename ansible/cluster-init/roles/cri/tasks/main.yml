@@ -28,10 +28,13 @@
     state: latest
     update_cache: true
 
-- name: Enable cri
+- name: Enable containerd
   shell: sed -i 's/"cri"//g' /etc/containerd/config.toml
 
 - name: Restart containerd service
   ansible.builtin.systemd:
     state: restarted
     name: containerd
+
+- name: Set containerd as default cri
+  shell: crictl config runtime-endpoint unix:///run/containerd/containerd.sock

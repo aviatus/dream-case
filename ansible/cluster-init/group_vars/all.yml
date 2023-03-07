@@ -20,12 +20,6 @@ network: calico
 
 network_interface: ""
 
-enable_dashboard: yes
-
-# A list of insecure registries you might need to define
-# insecure_registries: []
-insecure_registries: ["gcr.io"]
-
 systemd_dir: /etc/docker
 system_env_dir: /etc
 network_dir: /etc/kubernetes/network
@@ -39,7 +33,6 @@ ansible_distribution_release: focal
 tmp_dir: /tmp/kubeadm-ansible-files
 
 # Container runtimes ('containerd', 'crio')
-container_runtime: docker
-cri_socket: unix:///run/docker.sock
+container_runtime: containerd
 
 master_ip: "{{ hostvars[groups['master'][0]]['ansible_default_ipv4'].address | default(groups['master'][0]) }}"
