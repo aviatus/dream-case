@@ -80,4 +80,4 @@ For a Jenkins pipeline that uses `input`, confirmation can be added at each stag
 
 The `cert-manager` is used for validation webhook certification for kube-api server communication. The validation webhook checks the deployment containers and rejects deployments where limits and requests are not set. Webhook Docker image pushed to `aviatus/validating-webhook`.
 
-Note: Some of the items on the list developed on the Kind cluster because of poor virtualbox experience on arm64. The rest are natively built on ec2 instances.
+_Note: Some of the items on the list developed on the Kind cluster because of poor virtualbox experience on arm64. The rest are natively built on ec2 instances._
