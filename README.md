@@ -22,7 +22,7 @@ The cluster uses the ELK stack with https communication. CA certificate and elas
 
 Helm chart was created which is dependent on `prometheus-community/prometheus` and `grafana/grafana` with modifications for app monitoring. Prometheus data source added to Grafana and created a Grafana dashboard.
 
-![Grafana Screenshot] (assets/grafana-dashboard.png)
+![Grafana Screenshot](assets/grafana-dashboard.png)
 
 https://snapshots.raintank.io/dashboard/snapshot/DgBzZvFuHupSaPUDRetbu3nRU42JojHZ
 
